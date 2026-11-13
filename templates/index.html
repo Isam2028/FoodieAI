@@ -1,0 +1,489 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodieAI | Smart Delivery Prediction</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* NEW FULL-BACKGROUND CENTERED HERO */
+
+        .hero.hero-centered {
+            position: relative;
+            min-height: 760px;
+            padding: 100px 7% 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+
+            background-image:
+                linear-gradient(
+                    rgba(10, 8, 6, 0.70),
+                    rgba(10, 8, 6, 0.78)
+                ),
+                url("{{ url_for('static', filename='images/foodieai-burger-hero.png') }}");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero-centered .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .hero-centered .hero-tag {
+            margin: 0 auto 28px;
+            justify-content: center;
+        }
+
+        .hero-centered h1 {
+            max-width: 1000px;
+            margin: 0 auto 25px;
+            color: #FFF9F0;
+            font-size: clamp(42px, 6vw, 76px);
+            line-height: 1.12;
+            letter-spacing: -2px;
+        }
+
+        .hero-centered h1 span {
+            display: block;
+            color: #FFA52F;
+            -webkit-text-fill-color: #FFA52F;
+        }
+
+        .hero-centered .hero-content > p {
+            max-width: 760px;
+            margin: 0 auto 35px;
+            color: #E0D8CE;
+            font-size: 17px;
+            line-height: 1.8;
+        }
+
+        .hero-centered .hero-buttons {
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .hero-centered .hero-stats {
+            justify-content: center;
+            align-items: center;
+            gap: 65px;
+            margin-top: 65px;
+        }
+
+        .hero-centered .hero-stats > div {
+            min-width: 130px;
+        }
+
+        .hero-centered .hero-stats h3 {
+            color: #FFA52F;
+            font-size: 32px;
+        }
+
+        .hero-centered .hero-stats p {
+            color: #E0D8CE;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+
+            .hero.hero-centered {
+                min-height: 700px;
+                padding: 75px 6% 55px;
+                background-position: center;
+            }
+
+            .hero-centered h1 {
+                font-size: 42px;
+                letter-spacing: -1px;
+            }
+
+            .hero-centered .hero-content > p {
+                font-size: 14px;
+            }
+
+            .hero-centered .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-centered .hero-buttons a {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .hero-centered .hero-stats {
+                gap: 25px;
+                margin-top: 45px;
+            }
+
+            .hero-centered .hero-stats > div {
+                min-width: 85px;
+            }
+
+            .hero-centered .hero-stats h3 {
+                font-size: 23px;
+            }
+
+            .hero-centered .hero-stats p {
+                font-size: 10px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <a href="#home" class="logo">
+            <span class="logo-icon">🍔</span>
+            Foodie<span>AI</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#predict">Predict</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/history">History</a>
+            <a href="#about">About</a>
+        </div>
+
+        <a href="#predict" class="nav-button">
+            Try Prediction <i data-lucide="arrow-up-right"></i>
+        </a>
+
+    </nav>
+
+
+    <!-- NEW CENTERED HERO SECTION -->
+
+    <section class="hero hero-centered" id="home">
+
+        <div class="hero-content">
+
+            <div class="hero-tag">
+                <span class="status-dot"></span>
+                AI-POWERED DELIVERY INTELLIGENCE
+            </div>
+
+            <h1>
+                Your food is on its way.
+                <span>We predict when.</span>
+            </h1>
+
+            <p>
+                Smart food delivery time estimation powered by
+                Machine Learning. Get intelligent delivery
+                predictions using distance, traffic, weather
+                and more.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#predict" class="primary-button">
+                    Predict Delivery Time
+                    <i data-lucide="arrow-right"></i>
+                </a>
+
+                <a href="#about" class="secondary-button">
+                    Explore Project
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div>
+                    <h3>1,000+</h3>
+                    <p>Training Records</p>
+                </div>
+
+                <div>
+                    <h3>98.49%</h3>
+                    <p>Test R² Score</p>
+                </div>
+
+                <div>
+                    <h3>AI</h3>
+                    <p>Powered Prediction</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- PREDICTION SECTION -->
+
+    <section class="prediction-section" id="predict">
+
+        <div class="section-heading">
+
+            <span class="section-tag">SMART PREDICTION</span>
+
+            <h2>Estimate your delivery time</h2>
+
+            <p>
+                Enter your delivery details and let our
+                Machine Learning model do the prediction.
+            </p>
+
+        </div>
+
+
+        <div class="prediction-container">
+
+            <div class="form-panel">
+
+                <div class="form-heading">
+                    <i data-lucide="clipboard-list"></i>
+
+                    <div>
+                        <h3>Delivery Information</h3>
+                        <p>Provide the following details</p>
+                    </div>
+                </div>
+
+
+                <form id="predictionForm">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="distance">Delivery Distance (km)</label>
+
+                            <input
+                                type="number"
+                                id="distance"
+                                min="0.1"
+                                max="15"
+                                step="0.1"
+                                value="5"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="traffic">Traffic Level</label>
+
+                            <select id="traffic" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="weather">Weather Condition</label>
+
+                            <select id="weather" required>
+                                <option value="Clear">Clear</option>
+                                <option value="Cloudy">Cloudy</option>
+                                <option value="Rainy">Rainy</option>
+                            </select>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="preparation">Preparation Time (minutes)</label>
+
+                            <input
+                                type="number"
+                                id="preparation"
+                                min="5"
+                                max="30"
+                                value="15"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="experience">Courier Experience (years)</label>
+
+                            <input
+                                type="number"
+                                id="experience"
+                                min="0"
+                                max="10"
+                                step="0.1"
+                                value="3"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="time">Time of Day</label>
+
+                            <select id="time" required>
+                                <option value="Morning">Morning</option>
+                                <option value="Afternoon">Afternoon</option>
+                                <option value="Evening" selected>Evening</option>
+                                <option value="Night">Night</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+
+                    <button type="submit" class="predict-button" id="predictButton">
+                        <i data-lucide="sparkles"></i>
+                        Predict Delivery Time
+                    </button>
+
+                    <p class="form-note">
+                        <i data-lucide="shield-check"></i>
+                        Your inputs are used only for this prediction.
+                    </p>
+
+                </form>
+
+            </div>
+
+
+            <!-- RESULT PANEL -->
+
+            <div class="result-panel">
+
+                <div class="result-icon">
+                    <i data-lucide="bike"></i>
+                </div>
+
+                <span class="result-label">YOUR ESTIMATED DELIVERY TIME</span>
+
+                <h2 id="resultTime">-- <span>min</span></h2>
+
+                <p id="resultMessage">
+                    Your prediction will appear here.
+                </p>
+
+                <div class="result-divider"></div>
+
+                <div class="result-details">
+
+                    <div>
+                        <i data-lucide="brain"></i>
+                        <span>ML Model</span>
+                        <strong>Linear Regression</strong>
+                    </div>
+
+                    <div>
+                        <i data-lucide="activity"></i>
+                        <span>Prediction Type</span>
+                        <strong>Regression</strong>
+                    </div>
+
+                </div>
+
+                <div id="errorMessage" class="error-message"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT SECTION -->
+
+    <section class="about-section" id="about">
+
+        <div class="section-heading">
+
+            <span class="section-tag">ABOUT THE TECHNOLOGY</span>
+
+            <h2>Intelligence behind every prediction</h2>
+
+            <p>
+                Our system uses Machine Learning to identify
+                patterns in historical food delivery data.
+            </p>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <i data-lucide="database"></i>
+                <h3>Data Processing</h3>
+                <p>Delivery records are processed and prepared for Machine Learning.</p>
+            </div>
+
+            <div class="feature-card">
+                <i data-lucide="brain-circuit"></i>
+                <h3>Machine Learning</h3>
+                <p>Regression algorithms learn relationships between delivery factors.</p>
+            </div>
+
+            <div class="feature-card">
+                <i data-lucide="clock"></i>
+                <h3>Time Prediction</h3>
+                <p>The trained model estimates delivery duration for new orders.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <a href="#home" class="logo">
+            🍔 Foodie<span>AI</span>
+        </a>
+
+        <p>
+            AI-Based Food Delivery Time Prediction System
+        </p>
+
+        <p class="copyright">
+            Academic Machine Learning Project
+        </p>
+
+        <p class="disclaimer">
+            Demonstration based on synthetic delivery data.
+            Predictions are estimates, not guaranteed arrival times.
+        </p>
+
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+</body>
+</html>

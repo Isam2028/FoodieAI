@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodieAI | Prediction History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* PREDICTION HISTORY - PREMIUM THEME */
+
+        .history-page {
+            max-width: 1250px;
+            margin: auto;
+            padding: 55px 25px;
+        }
+
+        .history-heading {
+            margin-bottom: 40px;
+        }
+
+        .history-heading .section-tag {
+            display: inline-block;
+            color: #FFAD35;
+            background: rgba(247,147,30,0.10);
+            border: 1px solid rgba(247,147,30,0.25);
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .history-heading h1 {
+            color: #FFF9F0;
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 12px;
+        }
+
+        .history-heading p {
+            color: #B8B0A5;
+            line-height: 1.7;
+        }
+
+        .history-stat {
+            max-width: 300px;
+            background: #1C1915;
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .history-stat span {
+            color: #B8B0A5;
+            font-size: 13px;
+        }
+
+        .history-stat h2 {
+            color: #FFAD35;
+            font-size: 35px;
+            margin: 15px 0 8px;
+        }
+
+        .history-stat small {
+            color: #8D857B;
+        }
+
+        .history-section-title {
+            color: #FFF9F0;
+            font-size: 23px;
+            margin: 45px 0 22px;
+        }
+
+        .history-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            background: #1C1915;
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 16px;
+        }
+
+        .history-table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 18px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .history-table th {
+            background: #29231C;
+            color: #FFAD35;
+            font-weight: 700;
+        }
+
+        .history-table td {
+            color: #D4CCC1;
+        }
+
+        .history-table tbody tr:hover td {
+            background: rgba(247,147,30,0.06);
+        }
+
+        .history-table .prediction-value {
+            color: #FFB347;
+            font-weight: 700;
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 55px 25px;
+            background: #1C1915;
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 16px;
+        }
+
+        .history-empty h3 {
+            color: #FFF9F0;
+            margin-bottom: 12px;
+        }
+
+        .history-empty p {
+            color: #B8B0A5;
+            margin-bottom: 25px;
+        }
+
+        .history-empty .primary-button {
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .history-footer {
+            margin-top: 65px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.09);
+            text-align: center;
+        }
+
+        .history-footer p {
+            color: #A89F93;
+            margin-top: 12px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .history-page {
+                padding: 35px 16px;
+            }
+
+            .history-stat {
+                max-width: none;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a href="/" class="logo">
+            🍔 Foodie<span>AI</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#predict">Predict</a>
+            <a href="/analytics">Analytics</a>
+            <a href="/history" class="active">History</a>
+            <a href="/#about">About</a>
+        </div>
+
+        <a href="/#predict" class="nav-button">
+            New Prediction →
+        </a>
+
+    </nav>
+
+
+    <!-- HISTORY CONTENT -->
+
+    <main class="history-page">
+
+        <div class="history-heading">
+
+            <span class="section-tag">
+                ✦ PREDICTION RECORDS
+            </span>
+
+            <h1>Prediction History</h1>
+
+            <p>
+                View and review previously generated food delivery predictions.
+            </p>
+
+        </div>
+
+
+        <!-- TOTAL PREDICTIONS -->
+
+        <div class="history-stat">
+
+            <span>Total Predictions</span>
+
+            <h2>{{ total_predictions }}</h2>
+
+            <small>Saved database records</small>
+
+        </div>
+
+
+        <!-- PREDICTION TABLE -->
+
+        <h2 class="history-section-title">
+            All Prediction Records
+        </h2>
+
+
+        {% if predictions %}
+
+        <div class="history-table-wrapper">
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Distance</th>
+                        <th>Traffic</th>
+                        <th>Weather</th>
+                        <th>Preparation</th>
+                        <th>Experience</th>
+                        <th>Time of Day</th>
+                        <th>Predicted Time</th>
+                        <th>Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for item in predictions %}
+
+                    <tr>
+
+                        <td>{{ item.id }}</td>
+
+                        <td>{{ item.distance_km }} km</td>
+
+                        <td>{{ item.traffic_level }}</td>
+
+                        <td>{{ item.weather }}</td>
+
+                        <td>{{ item.preparation_time_min }} min</td>
+
+                        <td>{{ item.courier_experience_years }} years</td>
+
+                        <td>{{ item.time_of_day }}</td>
+
+                        <td class="prediction-value">
+                            {{ item.predicted_time }} min
+                        </td>
+
+                        <td>{{ item.prediction_date }}</td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="history-empty">
+
+            <h3>No predictions available</h3>
+
+            <p>
+                Generate your first prediction to see it here.
+            </p>
+
+            <a href="/#predict" class="primary-button">
+                Make a Prediction →
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- FOOTER -->
+
+        <footer class="history-footer">
+
+            <a href="/" class="logo">
+                🍔 Foodie<span>AI</span>
+            </a>
+
+            <p>
+                AI-Based Food Delivery Time Prediction System
+            </p>
+
+            <p>
+                Academic Machine Learning Project
+            </p>
+
+        </footer>
+
+    </main>
+
+</body>
+</html>

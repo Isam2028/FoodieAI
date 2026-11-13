@@ -1,0 +1,751 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodieAI | Analytics Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* =====================================
+           ANALYTICS PAGE - LIGHT PROFESSIONAL
+        ===================================== */
+
+        .analytics-page {
+            max-width: 1250px;
+            margin: auto;
+            padding: 55px 25px;
+            background: #F7F5F0;
+            color: #24211D;
+        }
+
+        .analytics-heading {
+            margin-bottom: 45px;
+        }
+
+        .analytics-heading .section-tag {
+            display: inline-block;
+            color: #C87512;
+            background: #FFF1DC;
+            border: 1px solid #F2D6AE;
+            padding: 9px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .analytics-heading h1 {
+            color: #24211D;
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 12px;
+        }
+
+        .analytics-heading p {
+            color: #6B6258;
+            line-height: 1.7;
+        }
+
+        .analytics-section-title {
+            color: #24211D;
+            font-size: 23px;
+            margin: 45px 0 22px;
+        }
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .analytics-card,
+        .model-card,
+        .analytics-chart-card {
+            background: #FFFFFF;
+            border: 1px solid #E9E3DA;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(40, 30, 15, 0.04);
+        }
+
+        .analytics-card span {
+            color: #77716A;
+            font-size: 13px;
+        }
+
+        .analytics-card h2 {
+            color: #F59A23;
+            font-size: 32px;
+            margin: 16px 0 8px;
+        }
+
+        .analytics-card small {
+            color: #77716A;
+        }
+
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .model-card h3 {
+            color: #24211D;
+            font-size: 19px;
+            margin-bottom: 22px;
+        }
+
+        .model-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 13px 0;
+            border-bottom: 1px solid #E9E3DA;
+            color: #6B6258;
+            font-size: 14px;
+        }
+
+        .model-metric strong {
+            color: #C87512;
+        }
+
+        .selected-model {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 9px 14px;
+            border-radius: 30px;
+            background: #FFF1DC;
+            color: #A65D0B;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .analytics-chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .analytics-chart-card h3 {
+            color: #24211D;
+            font-size: 17px;
+            margin-bottom: 22px;
+        }
+
+        .analytics-chart-card p {
+            color: #6B6258;
+            font-size: 12px;
+            line-height: 1.6;
+            margin-top: 18px;
+        }
+
+        .analytics-chart-card canvas {
+            width: 100% !important;
+            max-height: 300px;
+        }
+
+        .distance-chart {
+            margin-top: 20px;
+        }
+
+        .analytics-disclaimer {
+            color: #77716A;
+            font-size: 12px;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        @media (max-width: 850px) {
+            .analytics-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .analytics-page {
+                padding: 35px 16px;
+            }
+
+            .analytics-stats,
+            .model-grid,
+            .analytics-chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-card,
+            .model-card,
+            .analytics-chart-card {
+                padding: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a href="/" class="logo">
+            🍔 Foodie<span>AI</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#predict">Predict</a>
+            <a href="/analytics" class="active">Analytics</a>
+            <a href="/history">History</a>
+            <a href="/#about">About</a>
+        </div>
+
+        <a href="/#predict" class="nav-button">
+            Try Prediction →
+        </a>
+
+    </nav>
+
+
+    <!-- ANALYTICS DASHBOARD -->
+
+    <main class="analytics-page">
+
+        <div class="analytics-heading">
+
+            <span class="section-tag">
+                ✦ MACHINE LEARNING INSIGHTS
+            </span>
+
+            <h1>Analytics Dashboard</h1>
+
+            <p>
+                Explore delivery statistics, algorithm performance
+                and important patterns from our dataset.
+            </p>
+
+        </div>
+
+
+        <!-- DATASET OVERVIEW -->
+
+        <h2 class="analytics-section-title">
+            Dataset Overview
+        </h2>
+
+        <div class="analytics-stats">
+
+            <div class="analytics-card">
+                <span>Total Delivery Records</span>
+                <h2>{{ statistics.total_records }}</h2>
+                <small>Dataset size</small>
+            </div>
+
+            <div class="analytics-card">
+                <span>Average Delivery Time</span>
+                <h2>{{ statistics.average_time }} min</h2>
+                <small>Average duration</small>
+            </div>
+
+            <div class="analytics-card">
+                <span>Minimum Delivery Time</span>
+                <h2>{{ statistics.minimum_time }} min</h2>
+                <small>Fastest recorded duration</small>
+            </div>
+
+            <div class="analytics-card">
+                <span>Maximum Delivery Time</span>
+                <h2>{{ statistics.maximum_time }} min</h2>
+                <small>Longest recorded duration</small>
+            </div>
+
+        </div>
+
+
+        <!-- MODEL PERFORMANCE -->
+
+        <h2 class="analytics-section-title">
+            Model Performance
+        </h2>
+
+        <div class="model-grid">
+
+            {% for item in metrics %}
+
+            <div class="model-card">
+
+                <h3>{{ item["Model"] }}</h3>
+
+                <div class="model-metric">
+                    <span>MAE</span>
+                    <strong>{{ item["MAE"] }} min</strong>
+                </div>
+
+                <div class="model-metric">
+                    <span>RMSE</span>
+                    <strong>{{ item["RMSE"] }} min</strong>
+                </div>
+
+                <div class="model-metric">
+                    <span>R² Score</span>
+                    <strong>{{ item["R2 Score"] }}</strong>
+                </div>
+
+                {% if item["Model"] == "Linear Regression" %}
+
+                <div class="selected-model">
+                    ✓ Selected Model
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ALGORITHM COMPARISON -->
+
+        <h2 class="analytics-section-title">
+            Algorithm Comparison
+        </h2>
+
+        <div class="analytics-chart-grid">
+
+            <div class="analytics-chart-card">
+                <h3>MAE Comparison</h3>
+                <canvas id="maeChart"></canvas>
+                <p>
+                    Lower MAE indicates smaller average absolute prediction errors.
+                </p>
+            </div>
+
+            <div class="analytics-chart-card">
+                <h3>RMSE Comparison</h3>
+                <canvas id="rmseChart"></canvas>
+                <p>
+                    Lower RMSE indicates smaller errors, with greater penalty for large errors.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- DELIVERY DATA ANALYSIS -->
+
+        <h2 class="analytics-section-title">
+            Delivery Data Analysis
+        </h2>
+
+        <div class="analytics-chart-grid">
+
+            <div class="analytics-chart-card">
+                <h3>Average Time by Traffic</h3>
+                <canvas id="trafficChart"></canvas>
+            </div>
+
+            <div class="analytics-chart-card">
+                <h3>Average Time by Weather</h3>
+                <canvas id="weatherChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <!-- DISTANCE SCATTER CHART -->
+
+        <div class="analytics-chart-card distance-chart">
+
+            <h3>Distance vs Delivery Time</h3>
+
+            <canvas id="distanceChart"></canvas>
+
+            <p>
+                Relationship between delivery distance and delivery duration.
+            </p>
+
+        </div>
+
+
+        <p class="analytics-disclaimer">
+            Academic Machine Learning Project | Analytics based on synthetic demonstration data.
+        </p>
+
+    </main>
+
+
+    <!-- CHART DATA AND CONFIGURATION -->
+
+    <script>
+
+        const metrics = {{ metrics | tojson }};
+
+        const trafficData = {{ traffic_stats | tojson }};
+
+        const weatherData = {{ weather_stats | tojson }};
+
+        const distanceData = {{ distance_stats | tojson }};
+
+
+        // =====================================
+        // COMMON CHART SETTINGS
+        // =====================================
+
+        Chart.defaults.color = "#6B6258";
+
+        Chart.defaults.font.family = "Arial, sans-serif";
+
+        Chart.defaults.font.size = 12;
+
+        Chart.defaults.borderColor = "#E9E3DA";
+
+        Chart.defaults.scale.grid.color = "#EEE8DF";
+
+        const orange = "#F7931E";
+
+        const lightOrange = "#FFB347";
+
+        const brown = "#76502D";
+
+
+        // Shared axis appearance
+
+        const axisSettings = {
+
+            ticks: {
+                color: "#6B6258"
+            },
+
+            grid: {
+                color: "#EEE8DF"
+            },
+
+            border: {
+                color: "#DED6CA"
+            }
+
+        };
+
+
+        // =====================================
+        // MAE CHART
+        // =====================================
+
+        new Chart(document.getElementById("maeChart"), {
+
+            type: "bar",
+
+            data: {
+
+                labels: metrics.map(item => item.Model),
+
+                datasets: [{
+
+                    label: "MAE (minutes)",
+
+                    data: metrics.map(item => item.MAE),
+
+                    backgroundColor: [orange, brown],
+
+                    borderRadius: 7
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    x: {
+                        ...axisSettings,
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        ...axisSettings,
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        // =====================================
+        // RMSE CHART
+        // =====================================
+
+        new Chart(document.getElementById("rmseChart"), {
+
+            type: "bar",
+
+            data: {
+
+                labels: metrics.map(item => item.Model),
+
+                datasets: [{
+
+                    label: "RMSE (minutes)",
+
+                    data: metrics.map(item => item.RMSE),
+
+                    backgroundColor: [lightOrange, brown],
+
+                    borderRadius: 7
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    x: {
+                        ...axisSettings,
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        ...axisSettings,
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        // =====================================
+        // TRAFFIC CHART
+        // =====================================
+
+        new Chart(document.getElementById("trafficChart"), {
+
+            type: "bar",
+
+            data: {
+
+                labels: Object.keys(trafficData),
+
+                datasets: [{
+
+                    label: "Average Delivery Time (minutes)",
+
+                    data: Object.values(trafficData),
+
+                    backgroundColor: orange,
+
+                    borderRadius: 7
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    x: {
+                        ...axisSettings,
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        ...axisSettings,
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        // =====================================
+        // WEATHER CHART
+        // =====================================
+
+        new Chart(document.getElementById("weatherChart"), {
+
+            type: "bar",
+
+            data: {
+
+                labels: Object.keys(weatherData),
+
+                datasets: [{
+
+                    label: "Average Delivery Time (minutes)",
+
+                    data: Object.values(weatherData),
+
+                    backgroundColor: lightOrange,
+
+                    borderRadius: 7
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+
+                scales: {
+
+                    x: {
+                        ...axisSettings,
+                        grid: {
+                            display: false
+                        }
+                    },
+
+                    y: {
+                        ...axisSettings,
+                        beginAtZero: true
+                    }
+
+                }
+
+            }
+
+        });
+
+
+        // =====================================
+        // DISTANCE SCATTER CHART
+        // =====================================
+
+        const scatterPoints = distanceData.distance.map(
+            (distance, index) => ({
+                x: distance,
+                y: distanceData.delivery_time[index]
+            })
+        );
+
+
+        new Chart(document.getElementById("distanceChart"), {
+
+            type: "scatter",
+
+            data: {
+
+                datasets: [{
+
+                    label: "Delivery Records",
+
+                    data: scatterPoints,
+
+                    backgroundColor: "rgba(247,147,30,0.65)",
+
+                    pointRadius: 4,
+
+                    pointHoverRadius: 6
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                plugins: {
+
+                    legend: {
+                        labels: {
+                            color: "#6B6258"
+                        }
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        ...axisSettings,
+
+                        title: {
+                            display: true,
+                            text: "Distance (km)",
+                            color: "#6B6258"
+                        }
+
+                    },
+
+                    y: {
+
+                        ...axisSettings,
+
+                        beginAtZero: true,
+
+                        title: {
+                            display: true,
+                            text: "Delivery Time (minutes)",
+                            color: "#6B6258"
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+
+    </script>
+
+</body>
+</html>
